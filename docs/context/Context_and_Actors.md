@@ -23,21 +23,16 @@
 
 ## 4. Use-Case diagram
 ```mermaid
-usecaseDiagram
-    actor Klient
-    actor OnboardingModul
-    actor GeneratorSmluv
-    actor BankCore
-    actor SMTPServer
+graph TD
 
-    (UC1)  Klient --> Vyplniť osobné údaje
-    (UC2)  Klient --> Nahrať doklad totožnosti
-    (UC3)  OnboardingModul --> Iniciovať generovanie zmluvy
-    (UC4)  GeneratorSmluv --> Generovať zmluvu
-    (UC5)  OnboardingModul --> Iniciovať podpis zmluvy
-    (UC6)  Klient --> Podpísať zmluvu
-    (UC7)  OnboardingModul --> Požiadať BankCore o vytvorenie účtu
-    (UC8)  BankCore --> Vytvoriť účet
-    (UC9)  OnboardingModul --> Požiadať SMTPServer o odoslanie e-mailu
-    (UC10) SMTPServer --> Odoslať e-mail
+Klient -->|UC1| Vyplnit_osobne_udaje
+Klient -->|UC2| Nahrat_doklad
+OnboardingModul -->|UC3| Iniciovat_generovanie_zmluvy
+GeneratorSmluv -->|UC4| Generovat_zmluvu
+OnboardingModul -->|UC5| Iniciovat_podpis
+Klient -->|UC6| Podpisat_zmluvu
+OnboardingModul -->|UC7| Poziadat_BankCore
+BankCore -->|UC8| Vytvorit_ucet
+OnboardingModul -->|UC9| Poziadat_SMTP
+SMTPServer -->|UC10| Odoslat_email
 ```
