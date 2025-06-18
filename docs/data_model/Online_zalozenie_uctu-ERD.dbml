@@ -1,0 +1,43 @@
+Table Klient {
+  client_id     uuid           [pk]
+  meno          varchar(100)   [not null]
+  priezvisko    varchar(100)   [not null]
+  rodne_cislo   varchar(10)    [unique, not null]
+  email         varchar(255)   [unique, not null]
+  telefon       varchar(20)    [not null]
+  adresa_trvala text
+  adresa_kor    text
+  created_at    timestamptz    
+}
+
+Table Doklad {
+  doklad_id     uuid         [pk]
+  client_id     uuid         [ref: > Klient.client_id]
+  typ_dokladu   varchar(20)  [not null]
+  cislo_dokladu varchar(30)  [not null]
+  subor_uri     text         [not null]
+  uploaded_at   timestamptz  
+}
+
+Table Zmluva {
+  zmluva_id     uuid         [pk]
+  client_id     uuid         [ref: > Klient.client_id]
+  stav          varchar(20)  [not null]            // napr. generated, signed
+  pdf_uri       text         [not null]
+  podpisana_at  timestamptz
+}
+
+Table Ucet {
+  ucet_id       uuid         [pk]
+  client_id     uuid         [ref: > Klient.client_id]
+  iban          varchar(34)  [unique, not null]
+  created_at    timestamptz  
+}
+
+Table EmailLog {
+  email_id      uuid         [pk]
+  client_id     uuid         [ref: > Klient.client_id]
+  predmet       varchar(150) [not null]
+  stav          varchar(20)  [not null]            // sent, failed…
+  sent_at       timestamptz
+}
