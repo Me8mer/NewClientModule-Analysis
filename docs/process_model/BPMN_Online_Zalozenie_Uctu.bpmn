@@ -1,0 +1,592 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.36.1">
+  <collaboration id="Collaboration_0kiwo55">
+    <participant id="Participant_1u18ecy" name="Modul pre  Online založenie účtu" processRef="Process_OnlineZalozenieUctu" />
+    <textAnnotation id="TextAnnotation_03e61f4">
+      <text>Max 3x</text>
+    </textAnnotation>
+    <association id="Association_0x97tz9" associationDirection="None" sourceRef="Task_OdoslatEmailZnova" targetRef="TextAnnotation_03e61f4" />
+  </collaboration>
+  <process id="Process_OnlineZalozenieUctu" isExecutable="true">
+    <extensionElements>
+      <camunda:properties>
+        <camunda:property name="" />
+      </camunda:properties>
+    </extensionElements>
+    <laneSet id="LaneSet_1x4rvn2">
+      <lane id="Lane_05kkg1p" name="GeneratorSmluv">
+        <flowNodeRef>Task_GenerujZmluvu</flowNodeRef>
+      </lane>
+      <lane id="Lane_0e9fxox" name="Klient">
+        <flowNodeRef>Activity_1hgtvvu</flowNodeRef>
+        <flowNodeRef>Activity_0ycq5y1</flowNodeRef>
+        <flowNodeRef>Task_PodpisatZmluvu</flowNodeRef>
+        <flowNodeRef>Task_VyplnitUdaje</flowNodeRef>
+        <flowNodeRef>Gateway_CheckEmail</flowNodeRef>
+        <flowNodeRef>Task_NahratDoklad</flowNodeRef>
+        <flowNodeRef>Gateway_1t54avm</flowNodeRef>
+      </lane>
+      <lane id="Lane_0bb7byt" name="Onboarding Module">
+        <flowNodeRef>Activity_147tzkp</flowNodeRef>
+        <flowNodeRef>StartEvent_1</flowNodeRef>
+        <flowNodeRef>Task_InicZmluva</flowNodeRef>
+        <flowNodeRef>Gateway_0oa7p8t</flowNodeRef>
+        <flowNodeRef>Event_1f6i14u</flowNodeRef>
+        <flowNodeRef>Activity_1f64pt3</flowNodeRef>
+        <flowNodeRef>Task_InitPodpis</flowNodeRef>
+        <flowNodeRef>Activity_1i81icm</flowNodeRef>
+        <flowNodeRef>Activity_03rvl02</flowNodeRef>
+        <flowNodeRef>Gateway_1pzheaf</flowNodeRef>
+        <flowNodeRef>Task_OdosliBankCore</flowNodeRef>
+        <flowNodeRef>Task_PoslEmail</flowNodeRef>
+        <flowNodeRef>EndEvent_1</flowNodeRef>
+        <flowNodeRef>Activity_1gqeexw</flowNodeRef>
+        <flowNodeRef>Event_0p6zw28</flowNodeRef>
+        <flowNodeRef>Activity_01m23rs</flowNodeRef>
+      </lane>
+      <lane id="Lane_05vitu2" name="BankCore">
+        <flowNodeRef>Task_VytvorUcet</flowNodeRef>
+        <flowNodeRef>Gateway_12fh39a</flowNodeRef>
+      </lane>
+      <lane id="Lane_1kw4hc6" name="SMTPServer">
+        <flowNodeRef>Task_OdoslatEmailZnova</flowNodeRef>
+        <flowNodeRef>Task_OdosliEmail</flowNodeRef>
+        <flowNodeRef>Gateway_EmailSent</flowNodeRef>
+      </lane>
+    </laneSet>
+    <serviceTask id="Activity_147tzkp" name="Zobraziť správu o chybe">
+      <extensionElements>
+        <camunda:inputOutput>
+          <camunda:outputParameter name="Output_0kvp4vt" />
+        </camunda:inputOutput>
+      </extensionElements>
+      <incoming>Flow_038rrbc</incoming>
+      <outgoing>Flow_0ocu1v3</outgoing>
+    </serviceTask>
+    <startEvent id="StartEvent_1" name="Začiatok" />
+    <serviceTask id="Task_InicZmluva" name="/UC3) Iniciovať generovanie zmluvy">
+      <documentation>../use-cases/UC3-Iniciovat_generovanie_zmluvy.md</documentation>
+      <incoming>Flow_0te9sir</incoming>
+      <outgoing>Flow_06wdh9a</outgoing>
+    </serviceTask>
+    <exclusiveGateway id="Gateway_0oa7p8t" name="Zmluva vygenerovaná?">
+      <incoming>Flow_06wdh9a</incoming>
+      <outgoing>Flow_1r802p7</outgoing>
+      <outgoing>Flow_1penh3y</outgoing>
+      <outgoing>Flow_153ycky</outgoing>
+    </exclusiveGateway>
+    <serviceTask id="Task_GenerujZmluvu" name="(UC4) Generovať zmluvu">
+      <documentation>../use-cases/UC4-Generovat_zmluvu.md</documentation>
+      <incoming>Flow_1penh3y</incoming>
+    </serviceTask>
+    <endEvent id="Event_1f6i14u" name="Koniec">
+      <incoming>Flow_0b8wss3</incoming>
+    </endEvent>
+    <serviceTask id="Activity_1f64pt3" name="Zobraz správu o technickej chybe">
+      <incoming>Flow_153ycky</incoming>
+      <outgoing>Flow_0b8wss3</outgoing>
+    </serviceTask>
+    <serviceTask id="Task_InitPodpis" name="(UC5) Iniciovať podpis zmluvy">
+      <documentation>../use-cases/UC5-Iniciovat_podpis_zlmuvy.md</documentation>
+      <outgoing>Flow_15ity6x</outgoing>
+    </serviceTask>
+    <serviceTask id="Activity_1i81icm" name="Zobraziť správu: neplatné údaje zo systému">
+      <extensionElements>
+        <camunda:inputOutput>
+          <camunda:outputParameter name="Output_0kvp4vt" />
+        </camunda:inputOutput>
+      </extensionElements>
+      <incoming>Flow_1r802p7</incoming>
+      <outgoing>Flow_15v4egy</outgoing>
+    </serviceTask>
+    <sequenceFlow id="Flow_1" sourceRef="StartEvent_1" targetRef="Task_VyplnitUdaje" />
+    <sequenceFlow id="Flow_10yf7yo" sourceRef="Activity_01m23rs" targetRef="Task_VyplnitUdaje" />
+    <sequenceFlow id="Flow_15v4egy" sourceRef="Activity_1i81icm" targetRef="Task_VyplnitUdaje" />
+    <sequenceFlow id="Flow_0rg0u2l" name="Ne" sourceRef="Gateway_CheckEmail" targetRef="Activity_01m23rs" />
+    <sequenceFlow id="Flow_0ocu1v3" sourceRef="Activity_147tzkp" targetRef="Task_NahratDoklad" />
+    <sequenceFlow id="Flow_0te9sir" name="Ano" sourceRef="Gateway_1t54avm" targetRef="Task_InicZmluva" />
+    <sequenceFlow id="Flow_038rrbc" name="Ne" sourceRef="Gateway_1t54avm" targetRef="Activity_147tzkp" />
+    <sequenceFlow id="Flow_06wdh9a" sourceRef="Task_InicZmluva" targetRef="Gateway_0oa7p8t" />
+    <sequenceFlow id="Flow_1r802p7" sourceRef="Gateway_0oa7p8t" targetRef="Activity_1i81icm" />
+    <sequenceFlow id="Flow_1penh3y" name="Ano" sourceRef="Gateway_0oa7p8t" targetRef="Task_GenerujZmluvu" />
+    <sequenceFlow id="Flow_153ycky" name="Ne" sourceRef="Gateway_0oa7p8t" targetRef="Activity_1f64pt3" />
+    <sequenceFlow id="Flow_8" sourceRef="Task_GenerujZmluvu" targetRef="Task_InitPodpis" />
+    <sequenceFlow id="Flow_0b8wss3" sourceRef="Activity_1f64pt3" targetRef="Event_1f6i14u" />
+    <sequenceFlow id="Flow_0zfyqzl" name="Ne" sourceRef="Gateway_1pzheaf" targetRef="Activity_1hgtvvu" />
+    <sequenceFlow id="Flow_0vnxlts" sourceRef="Task_PodpisatZmluvu" targetRef="Gateway_1pzheaf" />
+    <sequenceFlow id="Flow_13" sourceRef="Task_OdosliBankCore" targetRef="Task_VytvorUcet" />
+    <sequenceFlow id="Flow_078luap" sourceRef="Task_VytvorUcet" targetRef="Gateway_12fh39a" />
+    <sequenceFlow id="Flow_1mmgft4" name="Ne" sourceRef="Gateway_12fh39a" targetRef="Activity_1gqeexw" />
+    <sequenceFlow id="Flow_0r80pla" name="Ano" sourceRef="Gateway_12fh39a" targetRef="Task_PoslEmail" />
+    <sequenceFlow id="Flow_15" sourceRef="Task_PoslEmail" targetRef="Task_OdosliEmail" />
+    <sequenceFlow id="Flow_17" name="Ne" sourceRef="Gateway_EmailSent" targetRef="Task_OdoslatEmailZnova" />
+    <sequenceFlow id="Flow_19" sourceRef="Task_OdoslatEmailZnova" targetRef="Task_OdosliEmail" />
+    <sequenceFlow id="Flow_16" sourceRef="Task_OdosliEmail" targetRef="Gateway_EmailSent" />
+    <sequenceFlow id="Flow_1mhs438" name="Ano" sourceRef="Gateway_EmailSent" targetRef="EndEvent_1" />
+    <sequenceFlow id="Flow_0vjvsz8" name="Ano" sourceRef="Gateway_1pzheaf" targetRef="Task_OdosliBankCore" />
+    <sequenceFlow id="Flow_0xlv1wk" sourceRef="Activity_1gqeexw" targetRef="Event_0p6zw28" />
+    <sequenceFlow id="Flow_0nwi5b2" sourceRef="Activity_1hgtvvu" targetRef="Gateway_1pzheaf" />
+    <sequenceFlow id="Flow_15ity6x" sourceRef="Task_InitPodpis" targetRef="Activity_03rvl02" />
+    <sequenceFlow id="Flow_12z4dha" sourceRef="Activity_1hgtvvu" targetRef="Activity_0ycq5y1" />
+    <sequenceFlow id="Flow_0fij59s" sourceRef="Activity_0ycq5y1" targetRef="Activity_03rvl02" />
+    <serviceTask id="Activity_03rvl02" name="Odošli SMS">
+      <incoming>Flow_15ity6x</incoming>
+      <incoming>Flow_0fij59s</incoming>
+      <outgoing>Flow_0tnipi8</outgoing>
+    </serviceTask>
+    <sequenceFlow id="Flow_0tnipi8" sourceRef="Activity_03rvl02" targetRef="Task_PodpisatZmluvu" />
+    <exclusiveGateway id="Gateway_1pzheaf" name="SMS kód správny?">
+      <incoming>Flow_0vnxlts</incoming>
+      <incoming>Flow_0nwi5b2</incoming>
+      <outgoing>Flow_0zfyqzl</outgoing>
+      <outgoing>Flow_0vjvsz8</outgoing>
+    </exclusiveGateway>
+    <serviceTask id="Task_OdosliBankCore" name="(UC7) Požiadať o vytvorenie účtu">
+      <documentation>../use-cases/UC7-Poziadat_BankCore_o_vytvorenie_uctu.md</documentation>
+      <incoming>Flow_0vjvsz8</incoming>
+    </serviceTask>
+    <serviceTask id="Task_VytvorUcet" name="(UC8) Vytvoriť účet">
+      <documentation>../use-cases/UC8-Vytvorit_ucet.md</documentation>
+      <outgoing>Flow_078luap</outgoing>
+    </serviceTask>
+    <exclusiveGateway id="Gateway_12fh39a" name="Účet vytvorený?">
+      <incoming>Flow_078luap</incoming>
+      <outgoing>Flow_1mmgft4</outgoing>
+      <outgoing>Flow_0r80pla</outgoing>
+    </exclusiveGateway>
+    <serviceTask id="Task_PoslEmail" name="(UC9) Požiadať SMTP o e-mail">
+      <documentation>../use-cases/UC9-Poziadat_SMTPServer_o_odoslanie_emailu.md</documentation>
+      <incoming>Flow_0r80pla</incoming>
+    </serviceTask>
+    <serviceTask id="Task_OdoslatEmailZnova" name="(UC10) Odoslať e-mail znova">
+      <documentation>../use-cases/UC10-Odoslat_email.md</documentation>
+      <incoming>Flow_17</incoming>
+    </serviceTask>
+    <serviceTask id="Task_OdosliEmail" name="Odoslať e-mail" />
+    <exclusiveGateway id="Gateway_EmailSent" name="E-mail odoslaný?">
+      <outgoing>Flow_1mhs438</outgoing>
+    </exclusiveGateway>
+    <endEvent id="EndEvent_1" name="Koniec">
+      <incoming>Flow_1mhs438</incoming>
+    </endEvent>
+    <serviceTask id="Activity_1gqeexw" name="Informovať klienta o zamietnutí">
+      <incoming>Flow_1mmgft4</incoming>
+      <outgoing>Flow_0xlv1wk</outgoing>
+    </serviceTask>
+    <endEvent id="Event_0p6zw28" name="Koniec">
+      <incoming>Flow_0xlv1wk</incoming>
+    </endEvent>
+    <userTask id="Activity_1hgtvvu" name="Zadať SMS znova">
+      <incoming>Flow_0zfyqzl</incoming>
+      <outgoing>Flow_0nwi5b2</outgoing>
+      <outgoing>Flow_12z4dha</outgoing>
+    </userTask>
+    <userTask id="Activity_0ycq5y1" name="Poziadaj o znovu poslanie SMS">
+      <incoming>Flow_12z4dha</incoming>
+      <outgoing>Flow_0fij59s</outgoing>
+    </userTask>
+    <userTask id="Task_PodpisatZmluvu" name="(UC6) Podpísať zmluvu">
+      <documentation>../use-cases/UC6-Podpisat_zmluvu.md</documentation>
+      <incoming>Flow_0tnipi8</incoming>
+      <outgoing>Flow_0vnxlts</outgoing>
+    </userTask>
+    <userTask id="Task_VyplnitUdaje" name="(UC1) Vyplniť osobné údaje">
+      <documentation>../use-cases/UC1-Vyplnit_osobne_udaje.md</documentation>
+      <incoming>Flow_10yf7yo</incoming>
+      <incoming>Flow_15v4egy</incoming>
+    </userTask>
+    <exclusiveGateway id="Gateway_CheckEmail" name="Základné údaje sú validné?">
+      <outgoing>Flow_0rg0u2l</outgoing>
+    </exclusiveGateway>
+    <userTask id="Task_NahratDoklad" name="(UC2) Nahrať doklad totožnosti">
+      <documentation>../use-cases/UC2-Nahrat_doklad_totoznosti.md</documentation>
+      <incoming>Flow_3</incoming>
+      <incoming>Flow_0ocu1v3</incoming>
+      <outgoing>Flow_1of4n4j</outgoing>
+    </userTask>
+    <exclusiveGateway id="Gateway_1t54avm" name="Doklad úspešne nahraný?">
+      <incoming>Flow_1of4n4j</incoming>
+      <outgoing>Flow_0te9sir</outgoing>
+      <outgoing>Flow_038rrbc</outgoing>
+    </exclusiveGateway>
+    <sequenceFlow id="Flow_2" sourceRef="Task_VyplnitUdaje" targetRef="Gateway_CheckEmail" />
+    <sequenceFlow id="Flow_3" name="Ano" sourceRef="Gateway_CheckEmail" targetRef="Task_NahratDoklad" />
+    <sequenceFlow id="Flow_1of4n4j" sourceRef="Task_NahratDoklad" targetRef="Gateway_1t54avm" />
+    <serviceTask id="Activity_01m23rs" name="Zobraz neplatné info">
+      <incoming>Flow_0rg0u2l</incoming>
+      <outgoing>Flow_10yf7yo</outgoing>
+    </serviceTask>
+  </process>
+  <bpmndi:BPMNDiagram id="Diagram_1">
+    <bpmndi:BPMNPlane id="Plane_1" bpmnElement="Collaboration_0kiwo55">
+      <bpmndi:BPMNShape id="Participant_1u18ecy_di" bpmnElement="Participant_1u18ecy" isHorizontal="true">
+        <omgdc:Bounds x="155" y="80" width="3330" height="970" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1kw4hc6_di" bpmnElement="Lane_1kw4hc6" isHorizontal="true">
+        <omgdc:Bounds x="185" y="780" width="3300" height="270" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_05vitu2_di" bpmnElement="Lane_05vitu2" isHorizontal="true">
+        <omgdc:Bounds x="185" y="660" width="3300" height="120" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_0bb7byt_di" bpmnElement="Lane_0bb7byt" isHorizontal="true">
+        <omgdc:Bounds x="185" y="420" width="3300" height="240" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_0e9fxox_di" bpmnElement="Lane_0e9fxox" isHorizontal="true">
+        <omgdc:Bounds x="185" y="220" width="3300" height="200" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_05kkg1p_di" bpmnElement="Lane_05kkg1p" isHorizontal="true">
+        <omgdc:Bounds x="185" y="80" width="3300" height="140" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0bf455a" bpmnElement="Activity_01m23rs">
+        <omgdc:Bounds x="515" y="455" width="110" height="70" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0k9wmjc" bpmnElement="Activity_147tzkp">
+        <omgdc:Bounds x="885" y="455" width="110" height="70" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_1_shape" bpmnElement="StartEvent_1">
+        <omgdc:Bounds x="225" y="505" width="110" height="70" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="259" y="588" width="42" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_InicZmluva_shape" bpmnElement="Task_InicZmluva">
+        <omgdc:Bounds x="1155" y="455" width="110" height="70" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0pgl7zl" bpmnElement="Gateway_0oa7p8t" isMarkerVisible="true">
+        <omgdc:Bounds x="1315" y="455" width="110" height="70" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1332" y="426" width="75" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_GenerujZmluvu_shape" bpmnElement="Task_GenerujZmluvu">
+        <omgdc:Bounds x="1435" y="125" width="110" height="70" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1f6i14u_di" bpmnElement="Event_1f6i14u">
+        <omgdc:Bounds x="1572" y="577" width="66" height="46" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1587" y="633" width="35" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0lvj55u" bpmnElement="Activity_1f64pt3">
+        <omgdc:Bounds x="1435" y="565" width="110" height="70" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_InitPodpis_shape" bpmnElement="Task_InitPodpis">
+        <omgdc:Bounds x="1625" y="455" width="110" height="70" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0dh50ms" bpmnElement="Activity_1i81icm">
+        <omgdc:Bounds x="885" y="565" width="110" height="70" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1by7jvp" bpmnElement="Activity_03rvl02">
+        <omgdc:Bounds x="1795" y="535" width="110" height="70" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_03sdzfh" bpmnElement="Gateway_1pzheaf" isMarkerVisible="true">
+        <omgdc:Bounds x="2095" y="455" width="110" height="70" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="2127" y="425.5" width="45" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_OdosliBankCore_shape" bpmnElement="Task_OdosliBankCore">
+        <omgdc:Bounds x="2415" y="455" width="110" height="70" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_VytvorUcet_shape" bpmnElement="Task_VytvorUcet">
+        <omgdc:Bounds x="2555" y="685" width="110" height="70" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1g5ynjq" bpmnElement="Gateway_12fh39a" isMarkerVisible="true">
+        <omgdc:Bounds x="2725" y="685" width="110" height="70" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="2680" y="673" width="79" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_PoslEmail_shape" bpmnElement="Task_PoslEmail">
+        <omgdc:Bounds x="2865" y="565" width="110" height="70" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_OdoslatEmailZnova_shape" bpmnElement="Task_OdoslatEmailZnova">
+        <omgdc:Bounds x="3165" y="935" width="110" height="70" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_OdosliEmail_shape" bpmnElement="Task_OdosliEmail">
+        <omgdc:Bounds x="3065" y="815" width="110" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_EmailSent_shape" bpmnElement="Gateway_EmailSent" isMarkerVisible="true">
+        <omgdc:Bounds x="3245" y="815" width="110" height="70" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="3367" y="843" width="85" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_1_shape" bpmnElement="EndEvent_1">
+        <omgdc:Bounds x="3335" y="505" width="110" height="70" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="3372" y="598" width="35" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0mpi74i" bpmnElement="Activity_1gqeexw">
+        <omgdc:Bounds x="2725" y="455" width="110" height="70" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0p6zw28_di" bpmnElement="Event_0p6zw28">
+        <omgdc:Bounds x="2887" y="467" width="66" height="46" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="2902" y="523" width="35" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1jnp2xm" bpmnElement="Activity_1hgtvvu">
+        <omgdc:Bounds x="2095" y="325" width="110" height="70" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0e7j4xu" bpmnElement="Activity_0ycq5y1">
+        <omgdc:Bounds x="2095" y="235" width="110" height="70" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_PodpisatZmluvu_shape" bpmnElement="Task_PodpisatZmluvu">
+        <omgdc:Bounds x="1925" y="325" width="110" height="70" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_VyplnitUdaje_shape" bpmnElement="Task_VyplnitUdaje">
+        <omgdc:Bounds x="415" y="285" width="110" height="70" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_CheckEmail_shape" bpmnElement="Gateway_CheckEmail" isMarkerVisible="true">
+        <omgdc:Bounds x="615" y="285" width="110" height="70" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="625" y="254" width="89" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_NahratDoklad_shape" bpmnElement="Task_NahratDoklad">
+        <omgdc:Bounds x="785" y="285" width="110" height="70" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_14zwi7q" bpmnElement="Gateway_1t54avm" isMarkerVisible="true">
+        <omgdc:Bounds x="975" y="285" width="110" height="70" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="990.5" y="254.5" width="79" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1_edge" bpmnElement="Flow_1">
+        <omgdi:waypoint x="335" y="540" />
+        <omgdi:waypoint x="375" y="540" />
+        <omgdi:waypoint x="375" y="320" />
+        <omgdi:waypoint x="415" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_10yf7yo_di" bpmnElement="Flow_10yf7yo">
+        <omgdi:waypoint x="515" y="490" />
+        <omgdi:waypoint x="470" y="490" />
+        <omgdi:waypoint x="470" y="355" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_15v4egy_di" bpmnElement="Flow_15v4egy">
+        <omgdi:waypoint x="885" y="600" />
+        <omgdi:waypoint x="470" y="600" />
+        <omgdi:waypoint x="470" y="355" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0rg0u2l_di" bpmnElement="Flow_0rg0u2l">
+        <omgdi:waypoint x="670" y="355" />
+        <omgdi:waypoint x="670" y="490" />
+        <omgdi:waypoint x="625" y="490" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="678" y="388" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ocu1v3_di" bpmnElement="Flow_0ocu1v3">
+        <omgdi:waypoint x="885" y="490" />
+        <omgdi:waypoint x="840" y="490" />
+        <omgdi:waypoint x="840" y="355" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0te9sir_di" bpmnElement="Flow_0te9sir">
+        <omgdi:waypoint x="1085" y="320" />
+        <omgdi:waypoint x="1120" y="320" />
+        <omgdi:waypoint x="1120" y="490" />
+        <omgdi:waypoint x="1155" y="490" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1090" y="328" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_038rrbc_di" bpmnElement="Flow_038rrbc">
+        <omgdi:waypoint x="1030" y="355" />
+        <omgdi:waypoint x="1030" y="490" />
+        <omgdi:waypoint x="995" y="490" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1042" y="385" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_06wdh9a_di" bpmnElement="Flow_06wdh9a">
+        <omgdi:waypoint x="1265" y="490" />
+        <omgdi:waypoint x="1315" y="490" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1r802p7_di" bpmnElement="Flow_1r802p7">
+        <omgdi:waypoint x="1370" y="525" />
+        <omgdi:waypoint x="1370" y="600" />
+        <omgdi:waypoint x="995" y="600" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1132" y="363" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1penh3y_di" bpmnElement="Flow_1penh3y">
+        <omgdi:waypoint x="1425" y="490" />
+        <omgdi:waypoint x="1490" y="490" />
+        <omgdi:waypoint x="1490" y="195" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1421" y="473" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_153ycky_di" bpmnElement="Flow_153ycky">
+        <omgdi:waypoint x="1370" y="525" />
+        <omgdi:waypoint x="1370" y="600" />
+        <omgdi:waypoint x="1435" y="600" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1377" y="533" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_8_edge" bpmnElement="Flow_8">
+        <omgdi:waypoint x="1545" y="160" />
+        <omgdi:waypoint x="1580" y="160" />
+        <omgdi:waypoint x="1580" y="490" />
+        <omgdi:waypoint x="1625" y="490" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0b8wss3_di" bpmnElement="Flow_0b8wss3">
+        <omgdi:waypoint x="1545" y="600" />
+        <omgdi:waypoint x="1572" y="600" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_07xuzqt" bpmnElement="Flow_0zfyqzl">
+        <omgdi:waypoint x="2180" y="474" />
+        <omgdi:waypoint x="2180" y="395" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="2192" y="461" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0vnxlts_di" bpmnElement="Flow_0vnxlts">
+        <omgdi:waypoint x="1980" y="395" />
+        <omgdi:waypoint x="1980" y="490" />
+        <omgdi:waypoint x="2095" y="490" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_13_edge" bpmnElement="Flow_13">
+        <omgdi:waypoint x="2525" y="490" />
+        <omgdi:waypoint x="2610" y="490" />
+        <omgdi:waypoint x="2610" y="685" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_078luap_di" bpmnElement="Flow_078luap">
+        <omgdi:waypoint x="2665" y="720" />
+        <omgdi:waypoint x="2725" y="720" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1mmgft4_di" bpmnElement="Flow_1mmgft4">
+        <omgdi:waypoint x="2780" y="685" />
+        <omgdi:waypoint x="2780" y="525" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="2792" y="672" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0r80pla_di" bpmnElement="Flow_0r80pla">
+        <omgdi:waypoint x="2835" y="720" />
+        <omgdi:waypoint x="2920" y="720" />
+        <omgdi:waypoint x="2920" y="635" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="2830" y="702" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_15_edge" bpmnElement="Flow_15">
+        <omgdi:waypoint x="2975" y="600" />
+        <omgdi:waypoint x="3010" y="600" />
+        <omgdi:waypoint x="3010" y="850" />
+        <omgdi:waypoint x="3065" y="850" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_17_edge" bpmnElement="Flow_17">
+        <omgdi:waypoint x="3300" y="885" />
+        <omgdi:waypoint x="3300" y="970" />
+        <omgdi:waypoint x="3275" y="970" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="3308" y="887" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_19_edge" bpmnElement="Flow_19">
+        <omgdi:waypoint x="3165" y="970" />
+        <omgdi:waypoint x="3120" y="970" />
+        <omgdi:waypoint x="3120" y="885" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_16_edge" bpmnElement="Flow_16">
+        <omgdi:waypoint x="3175" y="852" />
+        <omgdi:waypoint x="3248" y="852" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1mhs438_di" bpmnElement="Flow_1mhs438">
+        <omgdi:waypoint x="3300" y="815" />
+        <omgdi:waypoint x="3300" y="540" />
+        <omgdi:waypoint x="3335" y="540" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="3308" y="803" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0vjvsz8_di" bpmnElement="Flow_0vjvsz8">
+        <omgdi:waypoint x="2205" y="490" />
+        <omgdi:waypoint x="2415" y="490" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="2190" y="503" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0xlv1wk_di" bpmnElement="Flow_0xlv1wk">
+        <omgdi:waypoint x="2835" y="490" />
+        <omgdi:waypoint x="2887" y="490" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0nwi5b2_di" bpmnElement="Flow_0nwi5b2">
+        <omgdi:waypoint x="2120" y="395" />
+        <omgdi:waypoint x="2120" y="474" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_15ity6x_di" bpmnElement="Flow_15ity6x">
+        <omgdi:waypoint x="1735" y="490" />
+        <omgdi:waypoint x="1765" y="490" />
+        <omgdi:waypoint x="1765" y="570" />
+        <omgdi:waypoint x="1795" y="570" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12z4dha_di" bpmnElement="Flow_12z4dha">
+        <omgdi:waypoint x="2150" y="325" />
+        <omgdi:waypoint x="2150" y="305" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0fij59s_di" bpmnElement="Flow_0fij59s">
+        <omgdi:waypoint x="2096" y="240" />
+        <omgdi:waypoint x="1820" y="240" />
+        <omgdi:waypoint x="1820" y="535" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0tnipi8_di" bpmnElement="Flow_0tnipi8">
+        <omgdi:waypoint x="1870" y="535" />
+        <omgdi:waypoint x="1870" y="360" />
+        <omgdi:waypoint x="1925" y="360" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_edge" bpmnElement="Flow_2">
+        <omgdi:waypoint x="525" y="320" />
+        <omgdi:waypoint x="615" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_edge" bpmnElement="Flow_3">
+        <omgdi:waypoint x="725" y="320" />
+        <omgdi:waypoint x="785" y="320" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="720" y="298" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1of4n4j_di" bpmnElement="Flow_1of4n4j">
+        <omgdi:waypoint x="895" y="320" />
+        <omgdi:waypoint x="975" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_03e61f4_di" bpmnElement="TextAnnotation_03e61f4">
+        <omgdc:Bounds x="3280" y="980" width="75" height="30" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0x97tz9_di" bpmnElement="Association_0x97tz9">
+        <omgdi:waypoint x="3275" y="986" />
+        <omgdi:waypoint x="3280" y="988" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
